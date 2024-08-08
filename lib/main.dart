@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:newtokteck_task/screens/SignUp.dart';
 import 'package:newtokteck_task/screens/admin/admin_dashboard_screen.dart';
 import 'package:newtokteck_task/screens/user/user_dashboard_screen.dart';
+import 'package:newtokteck_task/services/location_services.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_services.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
-        // Provider<LocationService>(create: (_) => LocationService()),
+        Provider<LocationService>(create: (_) => LocationService()),
         // Provider<WeatherService>(create: (_) => WeatherService()),
         // ProxyProvider<WeatherService, ExcelService>(
         //   update: (_, weatherService, __) => ExcelService(weatherService: weatherService),
@@ -52,7 +53,7 @@ class AuthenticationWrapper extends StatelessWidget {
           if (user == null) {
             return LoginScreen();
           } else {
-            return FutureBuilder(
+            return FutureBuilder<String?>(
               future: authService.getUserRole(user),
               builder: (context, roleSnapshot) {
                 if (roleSnapshot.connectionState == ConnectionState.waiting) {
@@ -60,8 +61,10 @@ class AuthenticationWrapper extends StatelessWidget {
                 } else {
                   if (roleSnapshot.data == 'admin') {
                     return AdminDashboardScreen();
-                  } else {
+                  } else if (roleSnapshot.data == 'user') {
                     return UserDashboardScreen();
+                  } else {
+                    return LoginScreen(); // or show an error screen
                   }
                 }
               },

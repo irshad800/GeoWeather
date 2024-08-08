@@ -108,9 +108,7 @@ class _LoginState extends State<LoginScreen> {
                             email: email, password: password, context: context);
                         if (user != null) {
                           Navigator.pushReplacementNamed(context, '/');
-                        } else {
-                          // Handle login error
-                        }
+                        } else {}
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColors,

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,6 +8,7 @@ import 'package:newtokteck_task/utils/constants.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   Stream<User?> get user => _auth.authStateChanges();
 
@@ -16,23 +18,36 @@ class AuthService {
     required BuildContext context,
   }) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential result =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
+      // Get the signed-in user
+      User? user = result.user;
+
+      // Get user role
+      String? role = await getUserRole(user!);
+
+      // Navigate based on user role
+      if (role == 'admin') {
+        Navigator.pushReplacementNamed(context, '/admin');
+      } else {
+        Navigator.pushReplacementNamed(context, '/user');
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: primaryColors, content: Text("Login Succesfull")));
+          backgroundColor: primaryColors, content: Text("Login Successful")));
       print("Sign In Successful");
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => UserDashboardScreen()),
-      );
+      return user;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             backgroundColor: primaryColors,
             content: Text("Incorrect email or password")),
       );
+      return null;
     }
   }
 
@@ -42,6 +57,7 @@ class AuthService {
     required String cPassword,
     required BuildContext context,
     required String? username,
+    required String role, // Add role parameter
   }) async {
     if (password != cPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -55,6 +71,12 @@ class AuthService {
         email: email,
         password: password,
       );
+
+      // Create a user document in Firestore
+      await _db.collection('users').doc(result.user?.uid).set({
+        'email': email,
+        'role': role,
+      });
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -107,7 +129,7 @@ class AuthService {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: primaryColors,
-            content: Text("Google Sign In Was Succesfull"),
+            content: Text("Google Sign In Was Successful"),
           ),
         );
 
@@ -159,6 +181,12 @@ class AuthService {
   }
 
   Future<String?> getUserRole(User user) async {
-    return 'user';
+    try {
+      DocumentSnapshot doc = await _db.collection('users').doc(user.uid).get();
+      return doc['role'] as String?;
+    } catch (e) {
+      print("Error fetching user role: $e");
+      return null;
+    }
   }
 }

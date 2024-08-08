@@ -1,65 +1,4 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-//
-// import '../auth_services.dart';
-//
-// class SignupScreen extends StatefulWidget {
-//   @override
-//   _SignupScreenState createState() => _SignupScreenState();
-// }
-//
-// class _SignupScreenState extends State<SignupScreen> {
-//   final TextEditingController _emailController = TextEditingController();
-//   final TextEditingController _passwordController = TextEditingController();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final authService = Provider.of<AuthService>(context);
-//
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Sign Up'),
-//       ),
-//       body: Padding(
-//         padding: EdgeInsets.all(16.0),
-//         child: Column(
-//           children: [
-//             TextField(
-//               controller: _emailController,
-//               decoration: InputDecoration(labelText: 'Email'),
-//             ),
-//             TextField(
-//               controller: _passwordController,
-//               decoration: InputDecoration(labelText: 'Password'),
-//               obscureText: true,
-//             ),
-//             ElevatedButton(
-//               onPressed: () async {
-//                 final email = _emailController.text;
-//                 final password = _passwordController.text;
-//                 User? user = await authService.registerWithEmailAndPassword(
-//                     email: email, password: password, context: context);
-//                 if (user != null) {
-//                   Navigator.pushReplacementNamed(context, '/');
-//                 } else {
-//                   // Handle signup error
-//                 }
-//               },
-//               child: Text('Sign Up'),
-//             ),
-//             TextButton(
-//               onPressed: () {
-//                 Navigator.pushReplacementNamed(context, '/login');
-//               },
-//               child: Text('Already have an account? Log in'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -70,16 +9,18 @@ import '../widgets/Custom_textfeild.dart';
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
   @override
-  State<SignupScreen> createState() => _ContactState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _ContactState extends State<SignupScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
-  TextEditingController _CpasswordController = TextEditingController();
+  TextEditingController _cPasswordController = TextEditingController();
 
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _selectedRole = 'user'; // Default role
+
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
@@ -104,89 +45,99 @@ class _ContactState extends State<SignupScreen> {
                 ),
                 child: SingleChildScrollView(
                   child: SafeArea(
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: Form(
-                          key: _formkey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              // Welcome Text
-
-                              Text(
-                                "Lets create Account Toghether",
-                                style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.grey[500],
-                                    fontFamily: "Airbnb"),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, right: 30),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              "Let's create an account together",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey[500],
+                                fontFamily: "Airbnb",
                               ),
-
-                              SizedBox(height: 30),
-
-                              // Email Address
-                              CustomTextField(
-                                labeltext: 'Your Name',
-                                controller: _usernameController,
+                            ),
+                            SizedBox(height: 30),
+                            CustomTextField(
+                              labeltext: 'Your Name',
+                              controller: _usernameController,
+                            ),
+                            SizedBox(height: 20),
+                            CustomTextField(
+                              labeltext: 'Email Address',
+                              controller: _emailController,
+                            ),
+                            SizedBox(height: 20),
+                            CustomTextField(
+                              labeltext: 'Password',
+                              controller: _passwordController,
+                              isPassword: true,
+                            ),
+                            SizedBox(height: 20),
+                            CustomTextField(
+                              labeltext: 'Confirm Password',
+                              isPassword: true,
+                              controller: _cPasswordController,
+                            ),
+                            SizedBox(height: 20),
+                            DropdownButtonFormField<String>(
+                              value: _selectedRole,
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  _selectedRole = newValue!;
+                                });
+                              },
+                              items: <String>[
+                                'user',
+                                'admin'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                              decoration: InputDecoration(
+                                labelText: 'Select Role',
+                                border: OutlineInputBorder(),
                               ),
-
-                              SizedBox(height: 20),
-
-                              // Password
-                              CustomTextField(
-                                labeltext: 'Email Adress',
-                                controller: _emailController,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              CustomTextField(
-                                labeltext: 'Password',
-                                controller: _passwordController,
-                                isPassword: true,
-                              ),
-                              SizedBox(
-                                height: 20,
-                              ),
-                              CustomTextField(
-                                labeltext: 'Confirm Password',
-                                isPassword: true,
-                                controller: _CpasswordController,
-                              ),
-
-                              SizedBox(height: 20),
-
-                              // Sign In Button
-                              ElevatedButton(
-                                onPressed: () {
-                                  print(_emailController.text);
-                                  authService.registration(
-                                      password: _passwordController.text,
-                                      cPassword: _CpasswordController.text,
-                                      context: context,
-                                      username: _usernameController.text,
-                                      email: _emailController.text);
-                                  print(_emailController);
-                                  if (_formkey.currentState?.validate() ??
-                                      false) {}
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: primaryColors,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  minimumSize: Size(double.infinity, 50),
+                            ),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  User? user = await authService.registration(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                    cPassword: _cPasswordController.text,
+                                    context: context,
+                                    username: _usernameController.text,
+                                    role: _selectedRole, // Pass the role
+                                  );
+                                  if (user != null) {
+                                    Navigator.pushReplacementNamed(
+                                        context, '/');
+                                  } else {
+                                    // Handle signup error
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: primaryColors,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
                                 ),
-                                child: Text('Sign In',
-                                    style: TextStyle(color: Colors.white)),
+                                padding: EdgeInsets.symmetric(vertical: 15),
+                                minimumSize: Size(double.infinity, 50),
                               ),
-
-                              SizedBox(height: 10),
-
-                              // Sign In with Google Button
-                            ],
-                          ),
+                              child: Text('Sign Up',
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                            SizedBox(height: 10),
+                          ],
                         ),
                       ),
                     ),

@@ -1,12 +1,30 @@
 import 'package:flutter/material.dart';
 
 class UserDashboardScreen extends StatelessWidget {
-  const UserDashboardScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.yellow,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('User Dashboard'),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/upload_excel');
+              },
+              child: Text('Upload Excel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/weather_report');
+              },
+              child: Text('Weather Report'),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
