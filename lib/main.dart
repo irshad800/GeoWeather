@@ -2,13 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newtokteck_task/screens/SignUp.dart';
-import 'package:newtokteck_task/screens/admin/admin_dashboard_screen.dart';
-import 'package:newtokteck_task/screens/user/user_dashboard_screen.dart';
 import 'package:newtokteck_task/services/location_services.dart';
+import 'package:newtokteck_task/services/weather_services.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_services.dart';
+import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/user/upload_excel_screen.dart'; // Import the UploadExcelScreen
+import 'screens/user/user_dashboard_screen.dart';
+import 'services/excel_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,10 +26,11 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
         Provider<LocationService>(create: (_) => LocationService()),
-        // Provider<WeatherService>(create: (_) => WeatherService()),
-        // ProxyProvider<WeatherService, ExcelService>(
-        //   update: (_, weatherService, __) => ExcelService(weatherService: weatherService),
-        // ),
+        Provider<WeatherService>(create: (_) => WeatherService()),
+        ProxyProvider<WeatherService, ExcelService>(
+          update: (_, weatherService, __) =>
+              ExcelService(weatherService: weatherService),
+        ),
       ],
       child: MaterialApp(
         home: AuthenticationWrapper(),
@@ -35,6 +39,7 @@ class MyApp extends StatelessWidget {
           '/user': (context) => UserDashboardScreen(),
           '/login': (context) => LoginScreen(),
           '/signup': (context) => SignupScreen(),
+          '/upload-excel': (context) => UploadExcelScreen(),
         },
       ),
     );
@@ -53,7 +58,7 @@ class AuthenticationWrapper extends StatelessWidget {
           if (user == null) {
             return LoginScreen();
           } else {
-            return FutureBuilder<String?>(
+            return FutureBuilder(
               future: authService.getUserRole(user),
               builder: (context, roleSnapshot) {
                 if (roleSnapshot.connectionState == ConnectionState.waiting) {
@@ -61,10 +66,8 @@ class AuthenticationWrapper extends StatelessWidget {
                 } else {
                   if (roleSnapshot.data == 'admin') {
                     return AdminDashboardScreen();
-                  } else if (roleSnapshot.data == 'user') {
-                    return UserDashboardScreen();
                   } else {
-                    return LoginScreen(); // or show an error screen
+                    return UserDashboardScreen();
                   }
                 }
               },

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:newtokteck_task/screens/user/upload_excel_screen.dart';
+import 'package:newtokteck_task/screens/user/weather_report_screen.dart';
+
+import 'location_list_screen.dart';
 
 class UserDashboardScreen extends StatelessWidget {
   @override
@@ -12,13 +16,31 @@ class UserDashboardScreen extends StatelessWidget {
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/upload_excel');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UserLocationListScreen(),
+                    ));
+              },
+              child: Text('View Locations'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => UploadExcelScreen(),
+                    ));
               },
               child: Text('Upload Excel'),
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/weather_report');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WeatherReportScreen(),
+                    ));
               },
               child: Text('Weather Report'),
             ),
