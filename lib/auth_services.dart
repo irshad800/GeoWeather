@@ -24,13 +24,10 @@ class AuthService {
         password: password,
       );
 
-      // Get the signed-in user
       User? user = result.user;
 
-      // Get user role
       String? role = await getUserRole(user!);
 
-      // Navigate based on user role
       if (role == 'admin') {
         Navigator.pushReplacementNamed(context, '/admin');
       } else {

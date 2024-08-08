@@ -21,9 +21,13 @@ class _UploadExcelScreenState extends State<UploadExcelScreen> {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
+            print("Button Pressed");
             FilePickerResult? result = await FilePicker.platform.pickFiles();
             if (result != null) {
+              print("File Selected: ${result.files.single.name}");
               await excelService.uploadExcel(result.files.single.path!);
+            } else {
+              print("File selection canceled");
             }
           },
           child: Text('Select Excel File'),

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'add_location.dart';
-
 class AdminDashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -11,17 +9,15 @@ class AdminDashboardScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AddLocationScreen(),
-                    ));
+                Navigator.pushNamed(context, '/add-location');
               },
               child: Text('Add Location'),
             ),
+            // Add other buttons or widgets as needed
           ],
         ),
       ),
