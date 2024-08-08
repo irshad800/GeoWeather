@@ -1,24 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../auth_services.dart';
 import '../utils/constants.dart';
 import '../widgets/Custom_textfeild.dart';
 import 'SignUp.dart';
 
-class Login extends StatefulWidget {
-  Login({super.key});
+class LoginScreen extends StatefulWidget {
+  LoginScreen({super.key});
 
   @override
-  State<Login> createState() => _LoginState();
+  State<LoginScreen> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _CpasswordController = TextEditingController();
+
   bool _obscureText = true;
-  AuthServices _SigninFB = AuthServices();
   String? emailError;
   String? passwordError;
   bool loading = false;
@@ -31,6 +31,8 @@ class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     double height = MediaQuery.of(context).size.height;
     print(height);
 
@@ -99,12 +101,16 @@ class _LoginState extends State<Login> {
 
                     // Sign In Button
                     ElevatedButton(
-                      onPressed: () {
-                        if (_formkey.currentState?.validate() ?? false) {}
-                        _SigninFB.signIn(
-                            email: _emailController.text,
-                            password: _passwordController.text,
-                            context: context);
+                      onPressed: () async {
+                        final email = _emailController.text;
+                        final password = _passwordController.text;
+                        User? user = await authService.signIn(
+                            email: email, password: password, context: context);
+                        if (user != null) {
+                          Navigator.pushReplacementNamed(context, '/');
+                        } else {
+                          // Handle login error
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColors,
@@ -120,10 +126,9 @@ class _LoginState extends State<Login> {
 
                     SizedBox(height: 10),
 
-                    // Sign In with Google Button
                     ElevatedButton.icon(
                       onPressed: () {
-                        _SigninFB.signInWithGoogle(context: context);
+                        authService.signInWithGoogle(context: context);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
@@ -134,7 +139,7 @@ class _LoginState extends State<Login> {
                         padding: EdgeInsets.symmetric(vertical: 15),
                         minimumSize: Size(double.infinity, 50),
                       ),
-                      icon: Image.asset('assets/images/img_4.png', height: 24),
+                      icon: Image.asset('assets/images/google.png', height: 24),
                       label: Text(
                         'Sign in with Google',
                         style: TextStyle(color: Colors.black),
@@ -157,7 +162,7 @@ class _LoginState extends State<Login> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => SignUp(),
+                                  builder: (context) => SignupScreen(),
                                 ));
                           },
                           child: Text('Sign Up For Free',

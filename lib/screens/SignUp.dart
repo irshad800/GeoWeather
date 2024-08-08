@@ -1,25 +1,89 @@
+// import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+//
+// import '../auth_services.dart';
+//
+// class SignupScreen extends StatefulWidget {
+//   @override
+//   _SignupScreenState createState() => _SignupScreenState();
+// }
+//
+// class _SignupScreenState extends State<SignupScreen> {
+//   final TextEditingController _emailController = TextEditingController();
+//   final TextEditingController _passwordController = TextEditingController();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final authService = Provider.of<AuthService>(context);
+//
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('Sign Up'),
+//       ),
+//       body: Padding(
+//         padding: EdgeInsets.all(16.0),
+//         child: Column(
+//           children: [
+//             TextField(
+//               controller: _emailController,
+//               decoration: InputDecoration(labelText: 'Email'),
+//             ),
+//             TextField(
+//               controller: _passwordController,
+//               decoration: InputDecoration(labelText: 'Password'),
+//               obscureText: true,
+//             ),
+//             ElevatedButton(
+//               onPressed: () async {
+//                 final email = _emailController.text;
+//                 final password = _passwordController.text;
+//                 User? user = await authService.registerWithEmailAndPassword(
+//                     email: email, password: password, context: context);
+//                 if (user != null) {
+//                   Navigator.pushReplacementNamed(context, '/');
+//                 } else {
+//                   // Handle signup error
+//                 }
+//               },
+//               child: Text('Sign Up'),
+//             ),
+//             TextButton(
+//               onPressed: () {
+//                 Navigator.pushReplacementNamed(context, '/login');
+//               },
+//               child: Text('Already have an account? Log in'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../auth_services.dart';
 import '../utils/constants.dart';
 import '../widgets/Custom_textfeild.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
   @override
-  State<SignUp> createState() => _ContactState();
+  State<SignupScreen> createState() => _ContactState();
 }
 
-class _ContactState extends State<SignUp> {
+class _ContactState extends State<SignupScreen> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _CpasswordController = TextEditingController();
 
-  final AuthServices _SignUpFB = AuthServices();
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Scaffold(
       body: Container(
         color: primaryColors,
@@ -96,7 +160,7 @@ class _ContactState extends State<SignUp> {
                               ElevatedButton(
                                 onPressed: () {
                                   print(_emailController.text);
-                                  _SignUpFB.registration(
+                                  authService.registration(
                                       password: _passwordController.text,
                                       cPassword: _CpasswordController.text,
                                       context: context,
@@ -121,24 +185,6 @@ class _ContactState extends State<SignUp> {
                               SizedBox(height: 10),
 
                               // Sign In with Google Button
-                              ElevatedButton.icon(
-                                onPressed: () {},
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                    side: BorderSide.none,
-                                  ),
-                                  padding: EdgeInsets.symmetric(vertical: 15),
-                                  minimumSize: Size(double.infinity, 50),
-                                ),
-                                icon: Image.asset('assets/images/img_4.png',
-                                    height: 24),
-                                label: Text(
-                                  'Sign in with Google',
-                                  style: TextStyle(color: Colors.black),
-                                ),
-                              ),
                             ],
                           ),
                         ),

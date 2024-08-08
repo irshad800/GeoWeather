@@ -1,13 +1,42 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:newtokteck_task/sample.dart';
 import 'package:newtokteck_task/screens/login_screen.dart';
+import 'package:newtokteck_task/screens/user/user_dashboard_screen.dart';
 import 'package:newtokteck_task/utils/constants.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class AuthServices {
-  Future<void> registration({
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Stream<User?> get user => _auth.authStateChanges();
+
+  Future<User?> signIn({
+    required String email,
+    required String password,
+    required BuildContext context,
+  }) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: primaryColors, content: Text("Login Succesfull")));
+      print("Sign In Successful");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => UserDashboardScreen()),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            backgroundColor: primaryColors,
+            content: Text("Incorrect email or password")),
+      );
+    }
+  }
+
+  Future<User?> registration({
     required String email,
     required String password,
     required String cPassword,
@@ -18,71 +47,42 @@ class AuthServices {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Passwords do not match")),
       );
-      return;
+      return null;
     }
 
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      print("Account Created Successfully");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Account Created Successfully"),
+          backgroundColor: primaryColors,
+        ),
+      );
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: primaryColors,
-          content: Text("Account Created Succesfully")));
-      print("Username: $username");
-      print("Password: $password");
-      print("Confirm Password: $cPassword");
-      print("Email: $email");
+      return result.user;
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          backgroundColor: Colors.green.withOpacity(0.9),
-          content: Text(
-            e.message ?? "",
-            selectionColor: Colors.green,
-          ),
+          content: Text(e.message ?? ""),
+          backgroundColor: Colors.red.withOpacity(0.9),
         ),
       );
-      print(e.message);
+      return null;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            backgroundColor: primaryColors, content: Text("SignUp Failed")),
+          content: Text("SignUp Failed"),
+          backgroundColor: primaryColors,
+        ),
       );
-    }
-  }
-
-  // Sign-in method
-  Future<void> signIn({
-    required String email,
-    required String password,
-    required BuildContext context,
-  }) async {
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      await shared();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: primaryColors, content: Text("Login Succesfull")));
-      print("Sign In Successful");
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => sample()),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            backgroundColor: primaryColors,
-            content: Text("Incorrect email or password")),
-      );
+      return null;
     }
   }
 
@@ -113,7 +113,7 @@ class AuthServices {
 
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => sample()),
+          MaterialPageRoute(builder: (context) => UserDashboardScreen()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -122,7 +122,6 @@ class AuthServices {
             content: Text("Google Sign In was aborted"),
           ),
         );
-        await shared();
         print("Google Sign In was aborted");
       }
     } on FirebaseAuthException catch (e) {
@@ -146,20 +145,20 @@ class AuthServices {
       print("General Exception: $e");
     }
   }
-}
 
-Future<void> shared() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.setBool('repeat', true);
-}
+  Future<void> signOut({
+    required BuildContext context,
+  }) async {
+    await _auth.signOut();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Signed out'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
 
-Future<bool?> getSharedPreference() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final bool? auth2 = prefs.getBool('repeat');
-  return auth2;
-}
-
-Future<void> logoutShared() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  await prefs.remove('repeat');
+  Future<String?> getUserRole(User user) async {
+    return 'user';
+  }
 }
