@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "686899616534",
+    "project_id": "geoweather-9d250",
+    "storage_bucket": "geoweather-9d250.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:686899616534:android:26c114b62a4e6bcef84e37",
+        "android_client_info": {
+          "package_name": "com.example.newtokteck_task"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOXDIGqpLC5MPGpIpTnPREDWSEq-V4qKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
