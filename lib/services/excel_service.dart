@@ -11,77 +11,33 @@ class ExcelService {
   ExcelService({required this.weatherService});
 
   Future<void> uploadExcel(String filePath) async {
-    File file = File(filePath);
     try {
-      // Fetch weather data from the Excel file
-      List<WeatherDataa> weatherDataList =
-          await fetchWeatherDataFromExcel(file);
+      final file = File(filePath);
+      final bytes = file.readAsBytesSync();
+      final excel = Excel.decodeBytes(bytes);
 
-      // Handle the fetched weather data as needed
-      print(
-          'Weather data fetched successfully: ${weatherDataList.length} entries');
-    } catch (e) {
-      print('Error uploading or processing Excel file: $e');
-      rethrow; // Rethrow the exception to handle it in the UI or higher-level code
-    }
-  }
+      final List<WeatherDataa> weatherDataList = [];
 
-  Future<List<Map<String, double>>> parseExcelFile(File file) async {
-    var bytes = file.readAsBytesSync();
-    var excel = Excel.decodeBytes(bytes);
-    List<Map<String, double>> locations = [];
-
-    for (var table in excel.tables.keys) {
-      var sheet = excel.tables[table];
-      print('Sheet: $table');
-
-      for (var row in sheet!.rows) {
-        print(row); // Print the entire row
-        if (row.length >= 4) {
-          double? lat = _parseDouble(row[2]?.toString());
-          double? lon = _parseDouble(row[3]?.toString());
-
-          if (lat != null && lon != null) {
-            locations.add({'latitude': lat, 'longitude': lon});
+      for (var table in excel.tables.keys) {
+        var sheet = excel.tables[table];
+        for (var row in sheet!.rows) {
+          String cityName = row[0]?.value?.toString() ?? '';
+          if (cityName.isNotEmpty) {
+            final weatherData = await weatherService.fetchWeatherDataByCityName(
+                cityName: cityName);
+            if (weatherData != null) {
+              weatherDataList.add(weatherData);
+            }
           }
         }
       }
-    }
 
-    return locations;
-  }
-
-  double? _parseDouble(String? value) {
-    if (value == null || value.isEmpty) {
-      return null;
-    }
-    try {
-      return double.parse(value);
+      // You can now use weatherDataList as needed
+      // For example, you can print the data or save it to a database
+      print('Processed ${weatherDataList.length} weather data entries.');
     } catch (e) {
-      print('Error parsing value to double: $value');
-      return null;
+      print('Error processing Excel file: $e');
+      rethrow;
     }
-  }
-
-  Future<List<WeatherDataa>> fetchWeatherDataFromExcel(File file) async {
-    List<Map<String, double>> locations = await parseExcelFile(file);
-    List<WeatherDataa> weatherDataList = [];
-
-    for (var location in locations) {
-      try {
-        final weatherData = await weatherService.fetchWeatherData(
-          latitude: location['latitude']!,
-          longitude: location['longitude']!,
-        );
-        if (weatherData != null) {
-          weatherDataList.add(weatherData);
-        }
-      } catch (e) {
-        print(
-            'Error fetching weather data for (Lat: ${location['latitude']}, Lon: ${location['longitude']}): $e');
-      }
-    }
-
-    return weatherDataList;
   }
 }

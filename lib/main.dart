@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:newtokteck_task/screens/SignUp.dart';
-import 'package:newtokteck_task/services/location_services.dart';
-import 'package:newtokteck_task/services/weather_services.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_services.dart';
+import 'screens/SignUp.dart';
 import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/login_screen.dart';
-import 'screens/user/upload_excel_screen.dart'; // Import the UploadExcelScreen
+import 'screens/user/upload_excel_screen.dart';
 import 'screens/user/user_dashboard_screen.dart';
 import 'services/excel_service.dart';
+import 'services/location_services.dart';
+import 'services/weather_services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,32 +49,34 @@ class MyApp extends StatelessWidget {
 class AuthenticationWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context);
+    final authService = Provider.of<AuthService>(context, listen: false);
     return StreamBuilder<User?>(
       stream: authService.user,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
-          final user = snapshot.data;
+          final User? user = snapshot.data;
           if (user == null) {
             return LoginScreen();
           } else {
-            return FutureBuilder(
+            return FutureBuilder<String?>(
               future: authService.getUserRole(user),
               builder: (context, roleSnapshot) {
                 if (roleSnapshot.connectionState == ConnectionState.waiting) {
-                  return CircularProgressIndicator();
-                } else {
+                  return Center(child: CircularProgressIndicator());
+                } else if (roleSnapshot.hasData) {
                   if (roleSnapshot.data == 'admin') {
                     return AdminDashboardScreen();
                   } else {
                     return UserDashboardScreen();
                   }
+                } else {
+                  return LoginScreen();
                 }
               },
             );
           }
         } else {
-          return CircularProgressIndicator();
+          return Center(child: CircularProgressIndicator());
         }
       },
     );

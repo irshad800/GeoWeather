@@ -1,59 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:newtokteck_task/screens/user/weather_layouts/weather_layout_4.dart';
-import 'package:newtokteck_task/screens/user/weather_layouts/weather_layout_5.dart';
-import 'package:provider/provider.dart';
 
 import '../../models/weather_model.dart';
-import '../../services/weather_services.dart';
-import 'weather_layouts/weather_layout_1.dart';
-import 'weather_layouts/weather_layout_2.dart';
-import 'weather_layouts/weather_layout_3.dart';
 
 class WeatherReportScreen extends StatelessWidget {
-  final double? latitude;
-  final double? longitude;
+  final List<WeatherDataa>? weatherDataList;
 
-  WeatherReportScreen({this.latitude, this.longitude});
+  WeatherReportScreen({this.weatherDataList});
 
   @override
   Widget build(BuildContext context) {
-    final weatherService = Provider.of<WeatherService>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Weather Report'),
+        backgroundColor: Colors.blue, // Customize as needed
       ),
-      body: latitude != null && longitude != null
-          ? FutureBuilder<WeatherDataa?>(
-              future: weatherService.fetchWeatherData(
-                latitude: latitude!,
-                longitude: longitude!,
-              ),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data == null) {
-                  return Center(child: Text('No data available'));
-                } else {
-                  final weatherData = snapshot.data!;
-
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        WeatherLayout1(weatherData: weatherData),
-                        WeatherLayout2(weatherData: weatherData),
-                        WeatherLayout3(weatherData: weatherData),
-                        WeatherLayout4(weatherData: weatherData),
-                        WeatherLayout5(weatherData: weatherData),
-                      ],
-                    ),
-                  );
-                }
-              },
+      body: weatherDataList == null || weatherDataList!.isEmpty
+          ? Center(
+              child: Text('No weather data available'),
             )
-          : Center(child: Text('Invalid location data')),
+          : ListView.builder(
+              itemCount: weatherDataList!.length,
+              itemBuilder: (context, index) {
+                final weatherData = weatherDataList![index];
+                final temperature = weatherData.main?.temp ?? 0.0;
+                final weatherDescription =
+                    weatherData.weather?.isNotEmpty == true
+                        ? weatherData.weather!.first.description
+                        : 'No description available';
+
+                return ListTile(
+                  title: Text(weatherData.name ?? 'Unknown Location'),
+                  subtitle: Text(
+                    'Temperature: ${temperature.toStringAsFixed(1)}°C\n'
+                    'Weather: $weatherDescription',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  onTap: () {
+                    // Handle onTap if you want to navigate to a detailed view
+                  },
+                );
+              },
+            ),
     );
   }
 }

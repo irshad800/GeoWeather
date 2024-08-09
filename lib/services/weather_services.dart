@@ -3,17 +3,15 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../models/weather_model.dart';
-import '../utils/constants.dart'; // Ensure you have the API key defined in this file
+import '../utils/constants.dart';
 
 class WeatherService {
-  Future<WeatherDataa?> fetchWeatherData({
-    required double latitude,
-    required double longitude,
-  }) async {
+  Future<WeatherDataa?> fetchWeatherDataByCityName(
+      {required String cityName}) async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey'));
-
+      final response = await http
+          .get(Uri.parse('$baseUrl/weather?q=$cityName&appid=$apiKey'));
+      print("weather values:${response.body}");
       if (response.statusCode == 200) {
         return WeatherDataa.fromJson(jsonDecode(response.body));
       } else {

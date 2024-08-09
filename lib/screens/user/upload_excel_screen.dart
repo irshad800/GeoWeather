@@ -1,9 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:newtokteck_task/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/excel_service.dart';
+import '../../utils/constants.dart';
 
 class UploadExcelScreen extends StatefulWidget {
   @override
@@ -65,14 +65,16 @@ class _UploadExcelScreenState extends State<UploadExcelScreen> {
                         elevation: 5,
                       ),
                       onPressed: () async {
-                        FilePickerResult? result =
-                            await FilePicker.platform.pickFiles(
-                          type: FileType.custom,
-                          allowedExtensions: ['xlsx'],
-                        );
-                        if (result != null) {
-                          try {
+                        try {
+                          FilePickerResult? result =
+                              await FilePicker.platform.pickFiles(
+                            type: FileType.custom,
+                            allowedExtensions: ['xlsx'],
+                          );
+
+                          if (result != null) {
                             final filePath = result.files.single.path;
+
                             if (filePath != null) {
                               await excelService.uploadExcel(filePath);
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -81,23 +83,23 @@ class _UploadExcelScreenState extends State<UploadExcelScreen> {
                                       Text('Excel file processed successfully'),
                                 ),
                               );
-                              Navigator.pop(context); // Navigate back
+                              Navigator.pop(
+                                  context); // Navigate back after successful processing
                             } else {
                               throw Exception('File path is null');
                             }
-                          } catch (e) {
+                          } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                    'Error processing file: ${e.toString()}'),
+                                content: Text('No file selected'),
                               ),
                             );
                           }
-                        } else {
-                          // User canceled the picker
+                        } catch (e) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('No file selected'),
+                              content: Text(
+                                  'Error processing file: ${e.toString()}'),
                             ),
                           );
                         }
