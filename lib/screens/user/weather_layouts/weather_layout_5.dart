@@ -1,41 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:newtokteck_task/models/weather_model.dart';
 
-class WeatherLayout5 extends StatelessWidget {
-  final WeatherDataa weatherData;
+import '../../../models/weather_model.dart';
 
-  WeatherLayout5({required this.weatherData});
+class DetailedWeatherCardLayout extends StatelessWidget {
+  final List<WeatherDataa> weatherDataList;
+
+  DetailedWeatherCardLayout({required this.weatherDataList});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      color: Colors.purple[100],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Weather Layout 5',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Text(
-            'Temperature: ${weatherData.main?.temp}°C',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            'Weather: ${weatherData.weather?.first.description ?? 'No description'}',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text(
-            'Humidity: ${weatherData.main?.humidity}%',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text(
-            'Wind Speed: ${weatherData.wind?.speed} m/s',
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
+    return Column(
+      children: weatherDataList
+          .map((weatherData) => Card(
+                margin: EdgeInsets.all(8),
+                color: Colors.purple.shade100, // Light purple background
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(weatherData.name ?? 'Unknown Location',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18)),
+                      SizedBox(height: 10),
+                      Text(
+                        'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                      SizedBox(height: 5),
+                      Text(
+                        'Weather: ${weatherData.weather?.first.description ?? 'N/A'}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ],
+                  ),
+                ),
+              ))
+          .toList(),
     );
   }
 }

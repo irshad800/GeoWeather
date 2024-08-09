@@ -2,41 +2,31 @@ import 'package:flutter/material.dart';
 
 import '../../../models/weather_model.dart';
 
-class WeatherLayout4 extends StatelessWidget {
-  final WeatherDataa weatherData;
+class WeatherWithImageLayout extends StatelessWidget {
+  final List<WeatherDataa> weatherDataList;
 
-  WeatherLayout4({required this.weatherData});
+  WeatherWithImageLayout({required this.weatherDataList});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      color: Colors.orange[100],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Weather Layout 4',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Text(
-            'Temperature: ${weatherData.main?.temp}°C',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            'Weather: ${weatherData.weather?.first.description ?? 'No description'}',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text(
-            'Humidity: ${weatherData.main?.humidity}%',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text(
-            'Wind Speed: ${weatherData.wind?.speed} m/s',
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
+    return Column(
+      children: weatherDataList
+          .map((weatherData) => Card(
+                margin: EdgeInsets.all(8),
+                color: Colors.green.shade100, // Light green background
+                elevation: 5,
+                child: ListTile(
+                  contentPadding: EdgeInsets.all(16),
+                  leading: Icon(Icons.wb_sunny, size: 40), // Example icon
+                  title: Text(weatherData.name ?? 'Unknown Location'),
+                  subtitle: Text(
+                    'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C\n'
+                    'Weather: ${weatherData.weather?.first.description ?? 'N/A'}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ))
+          .toList(),
     );
   }
 }

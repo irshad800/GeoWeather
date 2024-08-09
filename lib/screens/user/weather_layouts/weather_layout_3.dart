@@ -2,40 +2,47 @@ import 'package:flutter/material.dart';
 
 import '../../../models/weather_model.dart';
 
-class WeatherLayout3 extends StatelessWidget {
-  final WeatherDataa weatherData;
+class WeatherGridLayout extends StatelessWidget {
+  final List<WeatherDataa> weatherDataList;
 
-  WeatherLayout3({required this.weatherData});
+  WeatherGridLayout({required this.weatherDataList});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16.0),
-      color: Colors.red[100],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Weather Layout 3',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          Text(
-            'Temperature: ${weatherData.main?.temp}°C',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            'Weather: ${weatherData.weather?.first.description ?? 'No description'}',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text(
-            'Humidity: ${weatherData.main?.humidity}%',
-            style: TextStyle(fontSize: 16),
-          ),
-          Text(
-            'Wind Speed: ${weatherData.wind?.speed} m/s',
-            style: TextStyle(fontSize: 16),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8.0,
+          mainAxisSpacing: 8.0,
+        ),
+        itemCount: weatherDataList.length,
+        itemBuilder: (context, index) {
+          final weatherData = weatherDataList[index];
+          return Card(
+            elevation: 5,
+            color: Colors.orange.shade100, // Light orange background
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(weatherData.name ?? 'Unknown Location',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(
+                    'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C',
+                  ),
+                  Text(
+                    'Weather: ${weatherData.weather?.first.description ?? 'N/A'}',
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

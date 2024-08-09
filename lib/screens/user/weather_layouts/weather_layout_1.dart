@@ -2,39 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../../../models/weather_model.dart';
 
-class WeatherLayout1 extends StatelessWidget {
-  final WeatherDataa weatherData;
+class BasicListTileLayout extends StatelessWidget {
+  final List<WeatherDataa> weatherDataList;
 
-  WeatherLayout1({required this.weatherData});
+  BasicListTileLayout({required this.weatherDataList});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(16.0),
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Temperature: ${weatherData.main?.temp}°C',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Weather: ${weatherData.weather?.first.description ?? 'No description'}',
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Humidity: ${weatherData.main?.humidity}%',
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              'Wind Speed: ${weatherData.wind?.speed} m/s',
-              style: TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
-      ),
+    return Column(
+      children: weatherDataList
+          .map((weatherData) => ListTile(
+                tileColor: Colors.lightBlue.shade50, // Light blue background
+                title: Text(weatherData.name ?? 'Unknown Location'),
+                subtitle: Text(
+                  'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C\n'
+                  'Weather: ${weatherData.weather?.first.description ?? 'N/A'}',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ))
+          .toList(),
     );
   }
 }
