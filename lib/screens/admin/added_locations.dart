@@ -4,7 +4,7 @@ import 'package:newtokteck_task/widgets/footer.dart';
 
 import '../../utils/constants.dart';
 
-class UserLocationListScreen extends StatelessWidget {
+class AdminLocationListScreen extends StatelessWidget {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   @override
@@ -13,7 +13,7 @@ class UserLocationListScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: primaryColors,
         title: Text(
-          'Locations',
+          'Added Locations',
           style: TextStyle(fontFamily: "Airbnb", color: Colors.white),
         ),
         elevation: 0,

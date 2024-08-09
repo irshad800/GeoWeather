@@ -1,33 +1,26 @@
 import 'package:flutter/material.dart';
 
 class WeatherLayout4 extends StatelessWidget {
-  final Map<String, dynamic>? weatherData;
+  final Map<String, dynamic> weatherData;
 
-  WeatherLayout4({this.weatherData});
+  WeatherLayout4({required this.weatherData});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(10),
+    return Container(
+      padding: EdgeInsets.all(16.0),
       color: Colors.orange[100],
-      child: ListTile(
-        leading: Icon(
-          Icons.thermostat,
-          size: 40,
-          color: Colors.orange,
-        ),
-        title: Text(
-          'Weather Layout 4',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Temperature: ${weatherData?['temperature'] ?? 'N/A'} °C'),
-            Text('Humidity: ${weatherData?['humidity'] ?? 'N/A'} %'),
-            Text('Wind Speed: ${weatherData?['windSpeed'] ?? 'N/A'} km/h'),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Weather Layout 4',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          Text('Temperature: ${weatherData['main']['temp']}K'),
+          Text('Weather: ${weatherData['weather'][0]['description']}'),
+          Text('Feels Like: ${weatherData['main']['feels_like']}K'),
+        ],
       ),
     );
   }

@@ -5,7 +5,6 @@ import 'package:newtokteck_task/screens/admin/admin_dashboard_screen.dart';
 import 'package:newtokteck_task/screens/login_screen.dart';
 import 'package:newtokteck_task/screens/user/upload_excel_screen.dart';
 import 'package:newtokteck_task/screens/user/user_dashboard_screen.dart';
-import 'package:newtokteck_task/screens/user/weather_report_screen.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -19,8 +18,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => UserDashboardScreen());
       case '/upload-excel':
         return MaterialPageRoute(builder: (_) => UploadExcelScreen());
-      case '/weather-report':
-        return MaterialPageRoute(builder: (_) => WeatherReportScreen());
+      // case '/weather-report':
+      //   return MaterialPageRoute(builder: (_) => WeatherReportScreen());
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginScreen());
       case '/signup':

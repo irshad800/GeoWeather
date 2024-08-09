@@ -18,14 +18,12 @@ class AuthService {
     required BuildContext context,
   }) async {
     try {
-      UserCredential result =
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
+      UserCredential result = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
       User? user = result.user;
-
       String? role = await getUserRole(user!);
 
       if (role == 'admin') {
@@ -35,14 +33,17 @@ class AuthService {
       }
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: primaryColors, content: Text("Login Successful")));
+        backgroundColor: primaryColors,
+        content: Text("Login Successful"),
+      ));
       print("Sign In Successful");
       return user;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            backgroundColor: primaryColors,
-            content: Text("Incorrect email or password")),
+          backgroundColor: primaryColors,
+          content: Text("Incorrect email or password"),
+        ),
       );
       return null;
     }
@@ -121,7 +122,7 @@ class AuthService {
           accessToken: _googleSignInAuthentication.accessToken,
         );
 
-        await FirebaseAuth.instance.signInWithCredential(credential);
+        await _auth.signInWithCredential(credential);
         print("Google Sign In Successful");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -147,10 +148,7 @@ class AuthService {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Colors.red.withOpacity(0.9),
-          content: Text(
-            e.message ?? "Authentication error",
-            selectionColor: Colors.red,
-          ),
+          content: Text(e.message ?? "Authentication error"),
         ),
       );
       print("FirebaseAuthException: ${e.message}");
@@ -185,5 +183,10 @@ class AuthService {
       print("Error fetching user role: $e");
       return null;
     }
+  }
+
+  String? getCurrentUserEmail() {
+    User? user = _auth.currentUser;
+    return user?.email;
   }
 }
