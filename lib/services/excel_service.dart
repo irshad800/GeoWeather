@@ -10,7 +10,7 @@ class ExcelService {
 
   ExcelService({required this.weatherService});
 
-  Future<void> uploadExcel(String filePath) async {
+  Future<List<WeatherDataa>> uploadExcel(String filePath) async {
     try {
       final file = File(filePath);
       final bytes = file.readAsBytesSync();
@@ -32,9 +32,8 @@ class ExcelService {
         }
       }
 
-      // You can now use weatherDataList as needed
-      // For example, you can print the data or save it to a database
       print('Processed ${weatherDataList.length} weather data entries.');
+      return weatherDataList; // Return the list of weather data
     } catch (e) {
       print('Error processing Excel file: $e');
       rethrow;

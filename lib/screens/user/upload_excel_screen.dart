@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:newtokteck_task/screens/user/weather_report_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../services/excel_service.dart';
@@ -76,15 +77,19 @@ class _UploadExcelScreenState extends State<UploadExcelScreen> {
                             final filePath = result.files.single.path;
 
                             if (filePath != null) {
-                              await excelService.uploadExcel(filePath);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content:
-                                      Text('Excel file processed successfully'),
+                              // Process the Excel file and fetch weather data
+                              final weatherDataList =
+                                  await excelService.uploadExcel(filePath);
+
+                              // Navigate to WeatherReportScreen with weather data
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WeatherReportScreen(
+                                    weatherDataList: weatherDataList,
+                                  ),
                                 ),
                               );
-                              Navigator.pop(
-                                  context); // Navigate back after successful processing
                             } else {
                               throw Exception('File path is null');
                             }
