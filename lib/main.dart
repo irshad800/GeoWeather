@@ -1,17 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:newtokteck_task/shared_components/services/auth_services.dart';
 import 'package:provider/provider.dart';
 
-import 'auth_services.dart';
-import 'screens/SignUp.dart';
-import 'screens/admin/admin_dashboard_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/user/upload_excel_screen.dart';
-import 'screens/user/user_dashboard_screen.dart';
-import 'services/excel_service.dart';
-import 'services/location_services.dart';
-import 'services/weather_services.dart';
+import 'modules/admin/screens/admin_dashboard_screen.dart';
+import 'modules/admin/services/location_services.dart';
+import 'modules/auth/SignUp.dart';
+import 'modules/auth/login_screen.dart';
+import 'modules/user/screens/upload_excel_screen.dart';
+import 'modules/user/screens/user_dashboard_screen.dart';
+import 'modules/user/services/excel_service.dart';
+import 'modules/user/services/weather_services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
