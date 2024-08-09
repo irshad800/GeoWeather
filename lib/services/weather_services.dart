@@ -1,35 +1,28 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:newtokteck_task/utils/constants.dart';
+
+import '../models/weather_model.dart';
+import '../utils/constants.dart'; // Ensure you have the API key defined in this file
 
 class WeatherService {
-  Future<Map<String, dynamic>> fetchWeatherData({
+  Future<WeatherDataa?> fetchWeatherData({
     required double latitude,
     required double longitude,
   }) async {
-    final url = Uri.parse('${baseUrl}weather').replace(queryParameters: {
-      'lat': latitude.toString(),
-      'lon': longitude.toString(),
-      'appid': apiKey,
-    });
-
     try {
-      final response = await http.get(url).timeout(Duration(seconds: 10));
+      final response = await http.get(Uri.parse(
+          'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey'));
 
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        return WeatherDataa.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception(
-            'Failed to load weather data. Status code: ${response.statusCode}');
+        print('Failed to load weather data');
+        return null;
       }
-    } on http.ClientException catch (e) {
-      throw Exception('Network error occurred: $e');
-    } on TimeoutException {
-      throw Exception('The request timed out.');
     } catch (e) {
-      throw Exception('An unknown error occurred: $e');
+      print('Error fetching weather data: $e');
+      return null;
     }
   }
 }

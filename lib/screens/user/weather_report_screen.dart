@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:newtokteck_task/screens/user/weather_layouts/weather_layout_4.dart';
+import 'package:newtokteck_task/screens/user/weather_layouts/weather_layout_5.dart';
 import 'package:provider/provider.dart';
 
+import '../../models/weather_model.dart';
 import '../../services/weather_services.dart';
 import 'weather_layouts/weather_layout_1.dart';
 import 'weather_layouts/weather_layout_2.dart';
 import 'weather_layouts/weather_layout_3.dart';
-import 'weather_layouts/weather_layout_4.dart';
-import 'weather_layouts/weather_layout_5.dart';
 
 class WeatherReportScreen extends StatelessWidget {
   final double? latitude;
@@ -23,7 +24,7 @@ class WeatherReportScreen extends StatelessWidget {
         title: Text('Weather Report'),
       ),
       body: latitude != null && longitude != null
-          ? FutureBuilder<Map<String, dynamic>>(
+          ? FutureBuilder<WeatherDataa?>(
               future: weatherService.fetchWeatherData(
                 latitude: latitude!,
                 longitude: longitude!,
@@ -33,7 +34,7 @@ class WeatherReportScreen extends StatelessWidget {
                   return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                } else if (!snapshot.hasData || snapshot.data == null) {
                   return Center(child: Text('No data available'));
                 } else {
                   final weatherData = snapshot.data!;

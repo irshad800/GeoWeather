@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:newtokteck_task/models/weather_model.dart';
 
 class WeatherLayout5 extends StatelessWidget {
-  final Map<String, dynamic> weatherData;
+  final WeatherDataa weatherData;
 
   WeatherLayout5({required this.weatherData});
 
@@ -17,9 +18,22 @@ class WeatherLayout5 extends StatelessWidget {
             'Weather Layout 5',
             style: Theme.of(context).textTheme.headline6,
           ),
-          Text('Temperature: ${weatherData['main']['temp']}K'),
-          Text('Weather: ${weatherData['weather'][0]['description']}'),
-          Text('Visibility: ${weatherData['visibility']} meters'),
+          Text(
+            'Temperature: ${weatherData.main?.temp}°C',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'Weather: ${weatherData.weather?.first.description ?? 'No description'}',
+            style: TextStyle(fontSize: 16),
+          ),
+          Text(
+            'Humidity: ${weatherData.main?.humidity}%',
+            style: TextStyle(fontSize: 16),
+          ),
+          Text(
+            'Wind Speed: ${weatherData.wind?.speed} m/s',
+            style: TextStyle(fontSize: 16),
+          ),
         ],
       ),
     );

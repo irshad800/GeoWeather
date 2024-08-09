@@ -66,25 +66,40 @@ class _UploadExcelScreenState extends State<UploadExcelScreen> {
                       ),
                       onPressed: () async {
                         FilePickerResult? result =
-                            await FilePicker.platform.pickFiles();
+                            await FilePicker.platform.pickFiles(
+                          type: FileType.custom,
+                          allowedExtensions: ['xlsx'],
+                        );
                         if (result != null) {
                           try {
-                            await excelService
-                                .uploadExcel(result.files.single.path!);
-                            // Show success message and go back
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content: Text(
-                                      'Excel file processed successfully')),
-                            );
-                            Navigator.pop(context); // Navigate back
+                            final filePath = result.files.single.path;
+                            if (filePath != null) {
+                              await excelService.uploadExcel(filePath);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content:
+                                      Text('Excel file processed successfully'),
+                                ),
+                              );
+                              Navigator.pop(context); // Navigate back
+                            } else {
+                              throw Exception('File path is null');
+                            }
                           } catch (e) {
-                            // Handle errors here
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                  content: Text('Error processing file: $e')),
+                                content: Text(
+                                    'Error processing file: ${e.toString()}'),
+                              ),
                             );
                           }
+                        } else {
+                          // User canceled the picker
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('No file selected'),
+                            ),
+                          );
                         }
                       },
                       child: Text(
