@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:newtokteck_task/screens/login_screen.dart';
 import 'package:newtokteck_task/utils/constants.dart';
 import 'package:newtokteck_task/widgets/footer.dart';
 
 import '../../auth_services.dart';
+import '../../widgets/nav_bar.dart';
 import 'add_location.dart';
 import 'added_locations.dart';
 
@@ -22,57 +22,9 @@ class AdminDashboardScreen extends StatelessWidget {
           'Admin Dashboard',
           style: TextStyle(color: Colors.white),
         ),
+        iconTheme: IconThemeData(color: Colors.white),
       ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            UserAccountsDrawerHeader(
-              accountName: Text('Admin'),
-              accountEmail: Text(adminEmail),
-              currentAccountPicture: CircleAvatar(
-                backgroundColor: Colors.white,
-                child: Text(
-                  'A',
-                  style: TextStyle(fontSize: 40.0, color: primaryColors),
-                ),
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [primaryColors, Colors.black],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.home, color: primaryColors),
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/admin');
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.location_on, color: primaryColors),
-              title: Text('Manage Locations'),
-              onTap: () {
-                Navigator.pushReplacementNamed(context, '/locations');
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.logout, color: Colors.red),
-              title: Text('Logout'),
-              onTap: () async {
-                await _authService.signOut(context: context);
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: NavbarWidget(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

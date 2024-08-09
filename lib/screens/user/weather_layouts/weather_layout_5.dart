@@ -13,20 +13,22 @@ class DetailedWeatherCardLayout extends StatelessWidget {
       children: weatherDataList
           .map((weatherData) => Card(
                 margin: EdgeInsets.all(8),
-                color: Colors.purple.shade100, // Light purple background
+                color: Colors.purple.shade100,
                 elevation: 5,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(weatherData.name ?? 'Unknown Location',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18)),
+                      Text(
+                        weatherData.name ?? 'Unknown Location',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                       SizedBox(height: 10),
                       Text(
-                        'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C',
-                        style: TextStyle(fontSize: 16),
+                        '${(weatherData.main!.temp! - 273.15).toStringAsFixed(0)}°C',
+                        style: TextStyle(fontSize: 16, fontFamily: "Airbnb"),
                       ),
                       SizedBox(height: 5),
                       Text(

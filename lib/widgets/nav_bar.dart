@@ -1,35 +1,56 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import '../auth_services.dart';
+import '../screens/login_screen.dart';
+import '../utils/constants.dart';
+
+final AuthService _authService = AuthService();
 
 class NavbarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    String? userEmail =
+        _authService.getCurrentUserEmail() ?? 'user@example.com';
     return Drawer(
-      child: ListView(
+      child: Column(
         children: [
-          ListTile(
-            title: Text('Home'),
-            onTap: () {
-              Navigator.pushReplacementNamed(
-                  context, '/home'); // Adjust this route if needed
-            },
+          UserAccountsDrawerHeader(
+            accountName: Text('User'),
+            accountEmail: Text(userEmail),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Text(
+                'U',
+                style: TextStyle(fontSize: 40.0, color: primaryColors),
+              ),
+            ),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [primaryColors, Colors.black],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
           ),
           ListTile(
+            leading: Icon(Icons.home, color: primaryColors),
+            title: Text('Dashboard'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/user-dashboard');
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.logout, color: Colors.red),
             title: Text('Logout'),
             onTap: () async {
-              try {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pushReplacementNamed(
-                    context, '/login'); // Navigate to login screen
-              } catch (e) {
-                // Handle logout error
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to log out: $e')),
-                );
-              }
+              await _authService.signOut(context: context);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
             },
           ),
-          // Add other navigation items
         ],
       ),
     );

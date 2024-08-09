@@ -55,15 +55,8 @@ class UserLocationListScreen extends StatelessWidget {
                               Icons.location_on,
                               color: primaryColors,
                             ),
-                            title: Text(
-                              '${location['city']}, ${location['district']}, ${location['state']}, ${location['country']}',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
                             subtitle: Text(
-                              'Country: ${location['country']}\nState: ${location['state']}\nDistrict: ${location['district']}',
+                              'Country: ${location['country']}\nState: ${location['state']}\nDistrict: ${location['district']}\nCity:${location['city']}',
                               style: TextStyle(
                                 color: Colors.grey[700],
                               ),

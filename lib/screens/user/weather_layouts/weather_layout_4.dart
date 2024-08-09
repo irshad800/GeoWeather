@@ -13,14 +13,14 @@ class WeatherWithImageLayout extends StatelessWidget {
       children: weatherDataList
           .map((weatherData) => Card(
                 margin: EdgeInsets.all(8),
-                color: Colors.green.shade100, // Light green background
+                color: Colors.green.shade100,
                 elevation: 5,
                 child: ListTile(
                   contentPadding: EdgeInsets.all(16),
-                  leading: Icon(Icons.wb_sunny, size: 40), // Example icon
+                  leading: Icon(Icons.wb_sunny, size: 40),
                   title: Text(weatherData.name ?? 'Unknown Location'),
                   subtitle: Text(
-                    'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C\n'
+                    '${(weatherData.main!.temp! - 273.15).toStringAsFixed(0)}°C\n'
                     'Weather: ${weatherData.weather?.first.description ?? 'N/A'}',
                     style: TextStyle(fontSize: 16),
                   ),

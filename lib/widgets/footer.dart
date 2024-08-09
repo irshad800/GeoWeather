@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:newtokteck_task/utils/constants.dart';
 
 class FooterWidget extends StatelessWidget {
   @override
@@ -7,11 +6,7 @@ class FooterWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 12.0),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [primaryColors, Colors.black],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Column(
@@ -20,12 +15,12 @@ class FooterWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.location_on, color: Colors.white, size: 20),
+              Icon(Icons.location_on, color: Colors.grey, size: 20),
               SizedBox(width: 6),
               Text(
-                '123 Main Street, City Name, Country',
+                '123 Main Street, Kochi, India',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.grey,
                   fontSize: 14.0,
                   fontWeight: FontWeight.w400,
                 ),
@@ -35,11 +30,12 @@ class FooterWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.phone, color: Colors.white, size: 20),
+              Icon(Icons.phone, color: Colors.grey, size: 20),
+              SizedBox(width: 6),
               Text(
                 '+1 (234) 567-890',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.grey,
                   fontSize: 14.0,
                   fontWeight: FontWeight.w400,
                 ),
@@ -49,22 +45,23 @@ class FooterWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.email, color: Colors.white, size: 20),
+              Icon(Icons.email, color: Colors.grey, size: 20),
               SizedBox(width: 6),
               Text(
-                'info@example.com',
+                'info@123.com',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.grey,
                   fontSize: 14.0,
                   fontWeight: FontWeight.w400,
                 ),
               ),
             ],
           ),
+          SizedBox(height: 10),
           Text(
-            '© 2024 Your Company Name',
+            '© 2024 Your Newtoktech',
             style: TextStyle(
-              color: Colors.white70,
+              color: Colors.grey,
               fontSize: 12.0,
               fontWeight: FontWeight.w400,
             ),

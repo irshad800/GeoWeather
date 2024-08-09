@@ -33,7 +33,7 @@ class ExcelService {
       }
 
       print('Processed ${weatherDataList.length} weather data entries.');
-      return weatherDataList; // Return the list of weather data
+      return weatherDataList;
     } catch (e) {
       print('Error processing Excel file: $e');
       rethrow;

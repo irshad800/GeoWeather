@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:newtokteck_task/utils/constants.dart';
 
 import '../../../models/weather_model.dart';
 
@@ -13,15 +14,31 @@ class WeatherDataCardLayout extends StatelessWidget {
       children: weatherDataList
           .map((weatherData) => Card(
                 margin: EdgeInsets.all(8),
-                color: Colors.cyan.shade100, // Light cyan background
+                color: primaryColors,
                 elevation: 5,
                 child: ListTile(
                   contentPadding: EdgeInsets.all(16),
-                  title: Text(weatherData.name ?? 'Unknown Location'),
+                  title: Text(
+                    weatherData.name ?? 'Unknown Location',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontFamily: "Airbnb",
+                    ),
+                  ),
                   subtitle: Text(
-                    'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C\n'
+                    '${(weatherData.main!.temp! - 273.15).toStringAsFixed(0)}°C' ??
+                        'N/A',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      fontFamily: "Airbnb",
+                    ),
+                  ),
+                  trailing: Text(
                     'Weather: ${weatherData.weather?.first.description ?? 'N/A'}',
-                    style: TextStyle(fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ))

@@ -22,21 +22,34 @@ class WeatherGridLayout extends StatelessWidget {
         itemCount: weatherDataList.length,
         itemBuilder: (context, index) {
           final weatherData = weatherDataList[index];
+          final temperatureCelsius = weatherData.main?.temp != null
+              ? (weatherData.main!.temp! - 273.15).toStringAsFixed(0)
+              : 'N/A';
+
           return Card(
             elevation: 5,
-            color: Colors.orange.shade100, // Light orange background
+            color: Colors.orange.shade100,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(weatherData.name ?? 'Unknown Location',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(
-                    'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C',
+                    weatherData.name ?? 'Unknown Location',
+                    style: TextStyle(fontFamily: "Airbnb"),
                   ),
                   Text(
-                    'Weather: ${weatherData.weather?.first.description ?? 'N/A'}',
+                    '${temperatureCelsius}°C',
+                    style: TextStyle(
+                      fontFamily: "Airbnb",
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Temperature: ${weatherData.main?.temp?.toStringAsFixed(1) ?? 'N/A'}°C',
+                    style: TextStyle(fontSize: 16),
                   ),
                 ],
               ),

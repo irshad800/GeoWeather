@@ -55,7 +55,7 @@ class AuthService {
     required String cPassword,
     required BuildContext context,
     required String? username,
-    required String role, // Add role parameter
+    required String role,
   }) async {
     if (password != cPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -70,7 +70,6 @@ class AuthService {
         password: password,
       );
 
-      // Create a user document in Firestore
       await _db.collection('users').doc(result.user?.uid).set({
         'email': email,
         'role': role,
