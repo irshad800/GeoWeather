@@ -31,6 +31,7 @@ class _AddLocationScreenState extends State<AddLocationScreen> {
           style: TextStyle(fontFamily: "Airbnb", color: Colors.white),
         ),
         elevation: 0,
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: Container(
         decoration: BoxDecoration(

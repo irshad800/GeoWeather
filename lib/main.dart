@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:newtokteck_task/router/router.dart';
 import 'package:newtokteck_task/shared_components/services/auth_services.dart';
 import 'package:provider/provider.dart';
 
