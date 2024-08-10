@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newtokteck_task/shared_components/services/auth_services.dart';
@@ -42,43 +41,6 @@ class MyApp extends StatelessWidget {
           '/upload-excel': (context) => UploadExcelScreen(),
         },
       ),
-    );
-  }
-}
-
-class AuthenticationWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final authService = Provider.of<AuthService>(context, listen: false);
-    return StreamBuilder<User?>(
-      stream: authService.user,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          final User? user = snapshot.data;
-          if (user == null) {
-            return LoginScreen();
-          } else {
-            return FutureBuilder<String?>(
-              future: authService.getUserRole(user),
-              builder: (context, roleSnapshot) {
-                if (roleSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (roleSnapshot.hasData) {
-                  if (roleSnapshot.data == 'admin') {
-                    return AdminDashboardScreen();
-                  } else {
-                    return UserDashboardScreen();
-                  }
-                } else {
-                  return LoginScreen();
-                }
-              },
-            );
-          }
-        } else {
-          return Center(child: CircularProgressIndicator());
-        }
-      },
     );
   }
 }
